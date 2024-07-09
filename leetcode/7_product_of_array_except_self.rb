@@ -25,6 +25,55 @@
 
 # Follow up: Can you solve the problem in O(1) extra space complexity? (The output array does not count as extra space for space complexity analysis.)
 
+# イテレーションの流れ
+# 範囲 (0...n) を作成:
+
+# n は nums 配列のサイズです。
+# 例えば nums = [1, 2, 3, 4] の場合、n = 4 です。
+# 範囲オブジェクト 0...4 は、0, 1, 2, 3 の値を含みます。
+# each メソッドで範囲を繰り返す:
+
+# each メソッドを使って、範囲内の各値 i に対してブロックを実行します。
+# ブロック内の処理:
+
+# result[i] *= left：現在の result[i] に左積 left を掛けます。
+# left *= nums[i]：左積 left を更新します。
+# result[n-1-i] *= right：現在の result[n-1-i] に右積 right を掛けます。
+# right *= nums[n-1-i]：右積 right を更新します。
+# 具体例
+# 例えば、nums = [1, 2, 3, 4] の場合：
+
+# 初期状態：
+
+# result = [1, 1, 1, 1]
+# left = 1
+# right = 1
+# イテレーション1 (i = 0)：
+
+# result[0] *= left → result[0] = 1
+# left *= nums[0] → left = 1 * 1 = 1
+# result[3] *= right → result[3] = 1
+# right *= nums[3] → right = 1 * 4 = 4
+# イテレーション2 (i = 1)：
+
+# result[1] *= left → result[1] = 1 * 1 = 1
+# left *= nums[1] → left = 1 * 2 = 2
+# result[2] *= right → result[2] = 1 * 4 = 4
+# right *= nums[2] → right = 4 * 3 = 12
+# イテレーション3 (i = 2)：
+
+# result[2] *= left → result[2] = 4 * 2 = 8
+# left *= nums[2] → left = 2 * 3 = 6
+# result[1] *= right → result[1] = 1 * 12 = 12
+# right *= nums[1] → right = 12 * 2 = 24
+# イテレーション4 (i = 3)：
+
+# result[3] *= left → result[3] = 1 * 6 = 6
+# left *= nums[3] → left = 6 * 4 = 24
+# result[0] *= right → result[0] = 1 * 24 = 24
+# right *= nums[0] → right = 24 * 1 = 24
+# 最終結果は result = [24, 12, 8, 6] となります。
+
 class Solution
   def product_except_self(nums)
     n = nums.size
