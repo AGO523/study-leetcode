@@ -154,3 +154,9 @@ https://neetcode.io/roadmap
 148_missing_number.rb
 149_sum_of_two_integers.rb
 150_reverse_integer.rb
+
+## lead
+
+問題を日本語にしてください。
+回答をコメント付きで解説してください。
+プログラムを実行したときに、経過がわかるよう、puts を入れてください
