@@ -46,62 +46,62 @@
 # バックトラッキング: 再帰的に探索して word を見つけられなければ、前の状態に戻って他の可能性を探索します。
 
 
-def exist(board, word)
-  # 行数と列数を取得
-  m, n = board.length, board[0].length
+# def exist(board, word)
+#   # 行数と列数を取得
+#   m, n = board.length, board[0].length
 
-  # バックトラッキング関数
-  def backtrack(board, word, i, j, idx)
-    # すべての文字を見つけた場合
-    if idx == word.length
-      return true
-    end
+#   # バックトラッキング関数
+#   def backtrack(board, word, i, j, idx)
+#     # すべての文字を見つけた場合
+#     if idx == word.length
+#       return true
+#     end
     
-    # 範囲外または現在のセルが一致しない場合
-    if i < 0 || i >= board.length || j < 0 || j >= board[0].length || board[i][j] != word[idx]
-      return false
-    end
+#     # 範囲外または現在のセルが一致しない場合
+#     if i < 0 || i >= board.length || j < 0 || j >= board[0].length || board[i][j] != word[idx]
+#       return false
+#     end
 
-    puts "Visiting board[#{i}][#{j}] = #{board[i][j]}, matching with word[#{idx}] = #{word[idx]}"
+#     puts "Visiting board[#{i}][#{j}] = #{board[i][j]}, matching with word[#{idx}] = #{word[idx]}"
 
-    # 現在のセルを一時的に訪問済みとしてマーク（再利用防止のために値を保存）
-    temp = board[i][j]
-    board[i][j] = nil
+#     # 現在のセルを一時的に訪問済みとしてマーク（再利用防止のために値を保存）
+#     temp = board[i][j]
+#     board[i][j] = nil
 
-    # 上下左右のセルを再帰的に探索
-    found = backtrack(board, word, i + 1, j, idx + 1) ||  # 下
-             backtrack(board, word, i - 1, j, idx + 1) ||  # 上
-             backtrack(board, word, i, j + 1, idx + 1) ||  # 右
-             backtrack(board, word, i, j - 1, idx + 1)     # 左
+#     # 上下左右のセルを再帰的に探索
+#     found = backtrack(board, word, i + 1, j, idx + 1) ||  # 下
+#              backtrack(board, word, i - 1, j, idx + 1) ||  # 上
+#              backtrack(board, word, i, j + 1, idx + 1) ||  # 右
+#              backtrack(board, word, i, j - 1, idx + 1)     # 左
 
-    # 探索が終わったら、元の値に戻す（バックトラック）
-    board[i][j] = temp
-    puts "Backtracking from board[#{i}][#{j}]"
+#     # 探索が終わったら、元の値に戻す（バックトラック）
+#     board[i][j] = temp
+#     puts "Backtracking from board[#{i}][#{j}]"
     
-    found
-  end
+#     found
+#   end
 
-  # 各セルをスタート地点として探索開始
-  for i in 0...m
-    for j in 0...n
-      if backtrack(board, word, i, j, 0)
-        return true
-      end
-    end
-  end
+#   # 各セルをスタート地点として探索開始
+#   for i in 0...m
+#     for j in 0...n
+#       if backtrack(board, word, i, j, 0)
+#         return true
+#       end
+#     end
+#   end
 
-  # 探索失敗
-  false
-end
+#   # 探索失敗
+#   false
+# end
 
-# 実行例
-board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]]
-word = "ABCCED"
-puts "Board:"
-board.each { |row| puts row.join(" ") }
-puts "Word to search: #{word}"
-result = exist(board, word)
-puts "Result: #{result}"
+# # 実行例
+# board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]]
+# word = "ABCCED"
+# puts "Board:"
+# board.each { |row| puts row.join(" ") }
+# puts "Word to search: #{word}"
+# result = exist(board, word)
+# puts "Result: #{result}"
 
 # バックトラックを使う理由は、探索の途中で誤った経路をたどっても、元の状態に戻って別の可能性を試せるようにするためです。
 
@@ -135,3 +135,61 @@ puts "Result: #{result}"
 
 # バックトラックがないと、一度訪れたセルに戻ってやり直すことができません。探索中に一つの経路が失敗したときに、他の経路を試す柔軟性を持つためには、探索前の状態に戻る必要があります。これにより、間違った道筋をたどった後でも正しい道を探し続けることができ、正しい単語 `word` を構築するための全ての可能性を試すことができます。
 
+# 最適化したコード
+# 以下のコードでは、訪れたセルを効率的に管理し、無駄な探索を減らすようにしました。また、Time Limit Exceeded を防ぐために、探索が失敗したときに即座にバックトラックする処理を工夫しています。
+
+def exist(board, word)
+  m, n = board.length, board[0].length
+  
+  # バックトラッキング関数
+  def backtrack(board, word, i, j, idx)
+    # 単語全体を見つけた場合
+    if idx == word.length
+      return true
+    end
+
+    # 範囲外または一致しない場合はすぐに終了
+    # 各条件は下記
+    # 1. 範囲外: i < 0 || i >= board.length || j < 0 || j >= board[0].length
+    # 2. 一致しない: board[i][j] != word[idx]
+    if i < 0 || i >= board.length || j < 0 || j >= board[0].length || board[i][j] != word[idx]
+      return false
+    end
+
+    # 現在のセルを一時的に保存
+    temp = board[i][j]
+    # 現在のセルを訪問済みにマーク
+    board[i][j] = '#'
+
+    # 上下左右に再帰的に探索
+    found = backtrack(board, word, i + 1, j, idx + 1) ||  # 下
+             backtrack(board, word, i - 1, j, idx + 1) ||  # 上
+             backtrack(board, word, i, j + 1, idx + 1) ||  # 右
+             backtrack(board, word, i, j - 1, idx + 1)     # 左
+
+    # 探索終了後にセルの状態を元に戻す（バックトラック）
+    board[i][j] = temp
+
+    return found
+  end
+
+  # 各セルを開始点としてバックトラッキングを試す
+  for i in 0...m
+    for j in 0...n
+      if backtrack(board, word, i, j, 0)
+        return true
+      end
+    end
+  end
+
+  return false
+end
+
+# 実行例
+board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]]
+word = "ABCCED"
+puts "Board:"
+board.each { |row| puts row.join(" ") }
+puts "Word to search: #{word}"
+result = exist(board, word)
+puts "Result: #{result}"
