@@ -98,8 +98,12 @@ https://neetcode.io/roadmap
 86_surrounded_regions.rb
 87_course_schedule.rb
 88_course_schedule_ii.rb
+
+<!-- 89, 90 はスキップ -->
+
 89_graph_valid_tree.rb
 90_number_of_connected_components_in_an_undirected_graph.rb
+
 91_redundant_connection.rb
 92_word_ladder.rb
 93_reconstruct_itinerary.rb
@@ -165,4 +169,5 @@ https://neetcode.io/roadmap
 
 問題を日本語にしてください。
 回答をコメント付きで解説してください。
+言語は ruby です。
 プログラムを実行したときに、経過がわかるよう、puts を入れてください
