@@ -20,12 +20,11 @@ def car_fleet(target, position, speed)
     time = (target - pos).to_f / spd
 
     # 追いつかない場合だけスタックに追加
-    # 降順のうち、前の車両の到着時間よりも早い場合は fleet に吸収されるので
-    # time > stack[-1]
     if stack.empty? || time > stack[-1]
       stack.push(time)
     end
-    # それ以外（追いつく）は fleet に吸収される
+    # 降順のうち、前の車両の到着時間よりも早い場合は fleet に吸収される
+    # 追いつく場合はスタックに追加しない
   end
 
   stack.size
