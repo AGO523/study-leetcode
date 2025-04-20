@@ -73,7 +73,7 @@ def search(nums, target)
     end
   end
 
-  -1 # 見つからなかった場合
+  -1
 end
 ```
 
